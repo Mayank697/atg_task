@@ -20,6 +20,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::middleware(['api'])->group(function () {
-    Route::post('todo/add', [TaskController::class, 'addTask']);
-    Route::post('todo/status', [TaskController::class, 'updateStatus']);
+    Route::post('todo/add', [TaskController::class, 'addTask'])->name('addTask');
+    Route::post('todo/status', [TaskController::class, 'updateStatus'])->name('updateStatus');
 });

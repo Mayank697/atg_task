@@ -11,6 +11,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -67,6 +68,7 @@
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
                                     </form>
+                                    <a class="dropdown-item" href="{{ route('home') }}">Dashboard</a>
                                 </div>
                             </li>
                         @endguest
@@ -80,4 +82,76 @@
         </main>
     </div>
 </body>
+<script>
+    $(document).ready(function(){
+        $("#taskFormSubmit").on('click', function(){
+            var user_id = $('#user_id').val();
+            var task = $('#taskName').val();
+            var status = $('#taskStatus').val();
+            //send ajax 
+            $.ajax({
+                url: "api/todo/add",
+                type: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content'),
+                    "API_KEY":"helloatg"
+                },
+                dataType: "json",
+                data: {
+                    "user_id":user_id,
+                    "task":task,
+                    "task_status":status
+                },
+                success: function(result) {
+                    sessionStorage.setItem("message", "new task created successfully");
+                    window.location.href = "{{ route('home')}}";
+                },
+                error: function(xhr, resp, text) {
+                    console.log(xhr, resp, text);
+                }
+            })
+        });
+
+        $("#taskUpdateSubmit").on('click', function () {
+            var task_id = $("#taskid").val();
+            var status = $("#updstatus").val();
+
+            $.ajax({
+                url:"/api/todo/status",
+                type:"POST",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content'),
+                    "API_KEY":"helloatg"
+                },
+                dataType:"json",
+                data: {
+                    "task_id":task_id,
+                    "status":status
+                },
+                success: function(result) {
+                    sessionStorage.setItem("message", "task status updated successfully");
+                    window.location.href = "{{ route('home')}}";
+                },
+                error: function(xhr, resp, text) {
+                    console.log(xhr, resp, text);
+                }
+            })
+        });
+
+    });
+    
+    var data = sessionStorage.getItem('message');
+    if(data != undefined) {
+        $('#successMessage').html(data)
+    }
+    else{
+        $("#successMessage").hide();
+    }
+    $(document).ready(function() {
+        setTimeout(function() {
+            $("#successMessage").hide();
+            sessionStorage.removeItem('message');
+        }, 3000);
+    });
+</script>
 </html>

@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+
 
 class TaskController extends Controller
 {
@@ -66,4 +70,12 @@ class TaskController extends Controller
             return response()->json(["message" => "Object Not Found"], 404);
         }
     }
+
+    function getTask() {
+        $id = Auth::id();
+        $tasks = Task::where('user_id', $id)->orderBy('id')->get();
+        
+        return view('home', compact('tasks'));
+    }
+
 }

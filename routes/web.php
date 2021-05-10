@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +18,16 @@ Route::get('/', function () {
     return view('main');
 });
 
+Route::get('/task', function () {
+    return view('task.create');
+})->middleware('auth');
+
+Route::get('/update/{id}', function ($id) {
+    return view('task.update', compact('id'));
+})->middleware('auth');
+
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/home',[TaskController::class, 'getTask'])->middleware('auth')->name('home');

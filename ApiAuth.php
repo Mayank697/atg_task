@@ -17,6 +17,7 @@ class ApiAuth
     public function handle(Request $request, Closure $next)
     {
         $token = $request->header('API_KEY');
+
         if($token != "helloatg")
             return response()->json(["status" => 0, "message" => "Invalid API key"], 401);
 
